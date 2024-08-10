@@ -1,0 +1,17 @@
+{
+  "name": "path-to-the-crown",
+  "version": "1.0.0",
+  "description": "A board game application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "cd frontend && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
