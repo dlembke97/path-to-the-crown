@@ -21,10 +21,18 @@ class Player {
         this.name = name;
         this.position = { x: 0, y: 0 };
         this.movesRemaining = 4;
+        this.lastMoveDirection = null;  // Track the last direction the player moved
+        this.restrictedDirection = null; // Restrict the next move if hitting a dead end
     }
 
     move(direction) {
         if (this.movesRemaining <= 0) return false;
+
+        // If restricted, only allow the opposite of the last move direction
+        if (this.restrictedDirection && direction !== this.restrictedDirection) {
+            console.log(`${this.name} can only move ${this.restrictedDirection} after hitting a dead end.`);
+            return false;
+        }
 
         switch (direction) {
             case 'North': this.position.y += 1; break;
@@ -35,7 +43,25 @@ class Player {
         }
 
         this.movesRemaining -= 1;
+        this.lastMoveDirection = direction; // Store the last move direction
+
+        // If they are moving away from a dead end, reset the restriction
+        if (this.restrictedDirection && direction === this.restrictedDirection) {
+            this.restrictedDirection = null;
+        }
+
         return true;
+    }
+
+    restrictNextMove() {
+        // Set the restricted direction based on the last move direction
+        switch (this.lastMoveDirection) {
+            case 'North': this.restrictedDirection = 'South'; break;
+            case 'South': this.restrictedDirection = 'North'; break;
+            case 'East': this.restrictedDirection = 'West'; break;
+            case 'West': this.restrictedDirection = 'East'; break;
+            default: this.restrictedDirection = null; break;
+        }
     }
 
     resetMoves() {
@@ -71,6 +97,7 @@ class Game {
         }
 
         if (squareType === 'Dead End') {
+            player.restrictNextMove();  // Restrict the next move to the opposite direction
             return { message: "Dead End! You must backtrack.", squareType };
         } else {
             return { message: "You found a path!", squareType };
