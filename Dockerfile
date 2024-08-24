@@ -1,5 +1,5 @@
 # Step 1: Build the React app
-FROM node:16 as build
+FROM node:16 AS build
 
 WORKDIR /app
 COPY frontend/package*.json ./
